@@ -1,18 +1,18 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const morgan = require("morgan");
-const connectDB = require("./config/db");
+import express from 'express';
+import dotenv from 'dotenv';
+import morgan from 'morgan';
+import connectDB from './config/db.js';
+import adminRouter from './routes/adminroutes.js';
+
+
 
 dotenv.config();
-
-const PORT = process.env.PORT || 5000;
-
 connectDB();
-
+const PORT = process.env.PORT || 5000;
 const app = new express();
 
 if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
+  app.use(morgan('dev'));
 }
 
 app.use(express.json());
@@ -20,6 +20,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+app.use('/api/admin', adminRouter);
 
 app.listen(
   PORT,
