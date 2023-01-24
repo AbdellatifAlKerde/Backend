@@ -22,17 +22,17 @@ const  productSchema =  new Schema({
       type: Boolean,
       default: false
   },
-   category: [{
-      type: Schema.Types.ObjectId,
-      ref: 'category'
-  }],
+//    category: [{
+//       type: Schema.Types.ObjectId,
+//       ref: 'categoryies'
+//   }],
 }, 
    {
       collection :"products"
 
 });
-productSchema.pre(['find','findone'],function(){
-this.populate(['category'])
-})
+// productSchema.pre(['find','findone'],function(){
+// this.populate(['category'])
+// })
 const product = model('product' ,productSchema);
 export default product;

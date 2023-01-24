@@ -1,9 +1,17 @@
+import { response } from "express";
 import Model from "../models/product.js";
 class Controller {
   // get all
+  //   getAll(req, res, next) {
+  //     Model.find({}, (err, response) => {
+  //         console.log("we are here")
+  //       if (err) return next(err);
+  //       res.status(200).send({ success: true, response });
+  //     });
+  //   }
+
   getAll(req, res, next) {
     Model.find({}, (err, response) => {
-        console.log("we are here")
       if (err) return next(err);
       res.status(200).send({ success: true, response });
     });
@@ -34,23 +42,32 @@ class Controller {
 
   // update
   put(req, res, next) {
+    // console.log("ao")
     let { id } = req.params;
-    Model.updateOne({ _id: id }),
-      (err, response) => {
+    try{
+    Model.findOneAndUpdate({ _id: id },req.body,{new:true},(err,response)=>{
         if (err) return next(err);
-        res.status(200).send({ sucess: true, response });
-      };
-  }
+        res.status(200).send({ sucess: true, response });})
+      }catch(err){console.log(err)}}
   // delete
-  delete(req, res, next) {
-    let { id } = req.params;
-    Model.findbyidAnddelete({ _id: id }),
-      (err, response) => {
-        if (err) return next(err);
-        res.status(200).send({ sucess: true, response });
-      };
-  }
+  //   delete(req, res, next) {
+  //     let { id } = req.params;
+  //     Model.findbyidAnddelete({ _id: id }),
+  //       (err, response) => {
+  //         if (err) return next(err);
+  //         res.status(200).send({ sucess: true, response });
+  //       };
+  //   }
+
+  
 }
+export async function deleteOne(req, res, next) {
+    let { id } = req.params;
+    Model.findOneAndDelete({ _id: id }, (err, response) => {
+      if (err) return next(err);
+      res.status(200).send({ success: true, response });
+    });
+  }
 const controller = new Controller();
 
 export default controller;

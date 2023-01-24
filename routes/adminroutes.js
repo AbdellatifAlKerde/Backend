@@ -7,7 +7,7 @@ router.get('/', controller.getAll);
 router.get('/:id', controller.get);
 router.post('/', controller.post);
 router.put('/:id', controller.put);
-router.delete('/:id', controller.delete);
+router.delete('/:id', controller.deleteOne);
 
 
 
