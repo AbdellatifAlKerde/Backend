@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
 import adminRouter from './routes/adminroutes.js';
+import productRouter from './routes/product.js';
 
 
 
@@ -21,7 +22,7 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 app.use('/api/admin', adminRouter);
-
+app.use('/api/product', productRouter);
 app.listen(
   PORT,
   console.log(`Server Running in ${process.env.NODE_ENV} on port ${PORT}`)
