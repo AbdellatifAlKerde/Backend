@@ -48,18 +48,7 @@ class Controller {
     Model.findOneAndUpdate({ _id: id },req.body,{new:true},(err,response)=>{
         if (err) return next(err);
         res.status(200).send({ sucess: true, response });})
-      }catch(err){console.log(err)}}
-  // delete
-  //   delete(req, res, next) {
-  //     let { id } = req.params;
-  //     Model.findbyidAnddelete({ _id: id }),
-  //       (err, response) => {
-  //         if (err) return next(err);
-  //         res.status(200).send({ sucess: true, response });
-  //       };
-  //   }
-
-  
+      }catch(err){console.log(err)}} 
 }
 export async function deleteOne(req, res, next) {
     let { id } = req.params;
