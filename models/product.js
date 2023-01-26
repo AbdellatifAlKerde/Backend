@@ -1,38 +1,39 @@
-import mongoose from 'mongoose';
-const {Schema,model} = mongoose;
+import mongoose from "mongoose";
+const { Schema, model } = mongoose;
 
-const  productSchema =  new Schema({
-   name: {
-    type:String,
-    required: true
-   },
-  price :{
-   type:Number,
-   required: true
-  },
-   description:{ 
-   type:String,
-   required: true
-   },
-   image:{
-  type: String,
-  required:true
-   },
-   isDeleted: {
+const productSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    isDeleted: {
       type: Boolean,
-      default: false
+      default: false,
+    },
+    //    category: [{
+    //       type: Schema.Types.ObjectId,
+    //       ref: 'categories'
+    //   }],
   },
-//    category: [{
-//       type: Schema.Types.ObjectId,
-//       ref: 'categoryies'
-//   }],
-}, 
-   {
-      collection :"products"
-
-});
+  {
+    collection: "products",
+  }
+);
 // productSchema.pre(['find','findone'],function(){
 // this.populate(['category'])
 // })
-const product = model('product' ,productSchema);
+const product = model("product", productSchema);
 export default product;
