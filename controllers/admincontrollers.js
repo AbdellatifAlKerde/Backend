@@ -1,6 +1,7 @@
 import Model from "../models/admin.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import utils from "../utils/token.js";
 // class Controller {
 // get all
 export function getAll(req, res, next) {
@@ -20,23 +21,6 @@ export function get(req, res, next) {
 }
 //add admin
 export async function post(req, res, next) {
-  // const usernameExist = await Model.findOne({userName: req.body.username});
-  // if (usernameExist) return res.status(400).send("User already exists")
-
-  // const salt = await bcrypt.genSalt(10)
-  // const hashPassword = await bcrypt.hash(req.body.password, salt)
-
-  // try {
-  //   let body = req.body;
-  //   let newAdmin = new Model(body);
-  //   newAdmin.save((error, response) => {
-  //     if (error) return res.status(500).send(error);
-  //     res.status(200).send({ success: true, response });
-  //   });
-  // }catch (err) {
-  //   res.status(400).send(err)
-  // }
-
   try {
     const { userName, password } = req.body;
 
@@ -55,23 +39,31 @@ export async function post(req, res, next) {
     // Hash password
     const hashPassword = await bcrypt.hash(password, 10);
 
+    // create admin token
+    const token = utils.getToken(userName, "5h");
+
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      expiration: "2h",
+    });
+
     // Create the admin
     const admin = await Model.create({
       userName: userName,
       password: hashPassword,
+      token: token,
     });
 
-    // save admin token
-    const token = jwt.sign(
-      { admin_id: admin._id, userName },
-      process.env.TOKEN_KEY,
-      {
-        expiresIn: "5h",
-      }
-    );
+    // const token = jwt.sign(
+    //   { admin_id: admin._id, userName },
+    //   process.env.TOKEN_KEY,
+    //   {
+    //     expiresIn: "5h",
+    //   }
+    // );
 
     //save admin token
-    admin.token = token;
+    // admin.token = token;
 
     //admin
     res.status(201).json(admin);
@@ -95,23 +87,24 @@ export async function login(req, res, next) {
 
     if (admin && (await bcrypt.compare(password, admin.password))) {
       // create token
-      const token = jwt.sign(
-        { admin_id: admin._id, userName },
-        process.env.TOKEN_KEY,
-        {
-          expiresIn: "5h",
-        }
-      );
+      const token = utils.getToken(userName, "5h");
 
       // save admin token
-      admin.token = token;
+      res.cookie("jwt", token);
 
       // admin
-      return res.status(200).json(admin);
+      return res.status(200).send("Login succesfully");
+    } else {
+      res.status(400).send("incorrect username or password");
     }
   } catch (err) {
     return res.status(400).send("Invalid Credentials");
   }
+}
+
+export function logOut(req, res) {
+  res.clearCookie("jwt");
+  return res.send("Log out successfully");
 }
 
 export function put(req, res, next) {
@@ -136,7 +129,9 @@ export function deleteOne(req, res, next) {
   let { id } = req.params;
   Model.findOneAndDelete({ _id: id }, (err, response) => {
     if (err) return next(err);
-    res.status(200).send({ success: true, response });
+    res
+      .status(200)
+      .send({ success: true, response, message: "Login Succesfully" });
   });
 }
 // }
@@ -147,6 +142,7 @@ const controller = {
   put,
   deleteOne,
   login,
+  logOut,
 };
 
 export default controller;

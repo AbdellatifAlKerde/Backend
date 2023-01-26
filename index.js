@@ -1,11 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
+// import multer from "muler"
 import connectDB from "./config/db.js";
 import adminRouter from "./routes/adminroutes.js";
 import productRouter from "./routes/product.js";
 import verifyToken from "./middleware/admin.js";
 import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 
 dotenv.config();
 connectDB();
@@ -17,6 +19,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.post("/welcome", verifyToken, (req, res) => {
