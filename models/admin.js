@@ -18,6 +18,7 @@ const adminSchema = new Schema(
   },
   {
     collection: "admins",
+    timestamps: true,
   }
 );
 const Admin = model("Admin", adminSchema);

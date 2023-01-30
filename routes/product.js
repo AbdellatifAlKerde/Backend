@@ -3,12 +3,12 @@ const router = express.Router();
 import controller from "../controllers/productcontrollers.js";
 import { deleteOne } from "../controllers/productcontrollers.js";
 import verifyToken from "../middleware/admin.js";
-import addImage from "../middleware/images.js";
+import image from "../middleware/image.js";
 
 router.get("/", verifyToken, controller.getAll);
 router.get("/:id", verifyToken, controller.get);
-router.post("/", verifyToken, controller.post);
-router.put("/:id", verifyToken, controller.put);
+router.post("/", verifyToken, image.uploadImage, controller.post);
+router.put("/:id", verifyToken, image.uploadImage, controller.put);
 router.delete("/:id", verifyToken, deleteOne);
 
 export default router;
